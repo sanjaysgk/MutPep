@@ -1,6 +1,6 @@
 from typing import List, Tuple, Dict, Set
+from datetime import datetime
 import logging
-from models.utils import dTime
 import pandas as pd
 import re
 import os
@@ -27,7 +27,21 @@ INIT_VARIABLES: Dict[str, int] = {
     'SUBSTITUTION_FOUND_2ND_ATTEMPT_counter': 0,
     'SUBSTITUTION_FOUND_3RD_ATTEMPT_counter': 0,
 }
+class dTime:
+    """
+    Simple class to return a timestamp string for logging or filenames.
+    Format: YYYYMMDD_HHMMSS
+    """
+    def __init__(self):
+        self.timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
 
+    def __str__(self):
+        return self.timestamp
+
+    def now(self):
+        """Return current timestamp string"""
+        return datetime.now().strftime("%Y%m%d_%H%M%S")
+    
 class Files_Manager:
     def __init__(self):
         self.file = None
@@ -283,7 +297,185 @@ class UniProtParser:
         self.log(f"Saved {len(self.sequences)} sequences to {output_path}")
 
 
-if __name__ == "__main__":
-    parser = UniProtParser()
-    sequences = parser.parse_file("uniprot_data.tsv")
-    parser.save_to_fasta("uniprot_sequences.fasta")
+# if __name__ == "__main__":
+#     parser = UniProtParser()
+#     sequences = parser.parse_file("uniprot_data.tsv")
+#     parser.save_to_fasta("uniprot_sequences.fasta")
+
+
+
+def parse_maf_file(file_path):
+    """
+    Parse a MAF (Mutation Annotation Format) file and extract ENST IDs and protein mutations.
+    
+    Args:
+        file_path (str): Path to the MAF file.
+        
+    Returns:
+        list: A list of dictionaries containing mutation information.
+    """
+    mutations = []
+    header = None
+    
+    with open(file_path, 'r') as f:
+        for line in f:
+            # Skip comment lines
+            if line.startswith('#'):
+                continue
+                
+            # Parse the header line
+            if header is None:
+                header = line.strip().split('\t')
+                continue
+                
+            # Parse data lines
+            fields = line.strip().split('\t')
+            if len(fields) < len(header):
+                # Pad with empty strings if the line has fewer fields than the header
+                fields.extend([''] * (len(header) - len(fields)))
+                
+            # Create a dictionary mapping column names to values
+            mutation_data = dict(zip(header, fields))
+            mutations.append(mutation_data)
+    
+    return mutations
+
+def extract_transcripts_and_mutations(mutations):
+    """
+    Extract ENST IDs and protein mutations from parsed MAF data.
+    
+    Args:
+        mutations (list): List of mutation dictionaries from parse_maf_file.
+        
+    Returns:
+        dict: Dictionary mapping ENST IDs to their protein mutations.
+    """
+    transcript_to_mutations = {}
+    
+    for mutation in mutations:
+        # Get the primary transcript ID
+        primary_transcript = mutation.get('Transcript_ID', '')
+        
+        # Extract information from the all_effects field
+        all_effects = mutation.get('all_effects', '')
+        
+        # Process the primary transcript if it's an ENST ID
+        if primary_transcript.startswith('ENST'):
+            if primary_transcript not in transcript_to_mutations:
+                transcript_to_mutations[primary_transcript] = []
+            
+            protein_change = mutation.get('HGVSp_Short', '') or mutation.get('HGVSp', '')
+            if not protein_change:
+                # Check if protein position information is available
+                protein_position = mutation.get('Protein_position', '')
+                amino_acids = mutation.get('Amino_acids', '')
+                if protein_position and amino_acids:
+                    protein_change = f"p.{amino_acids}{protein_position}"
+            
+            if protein_change:
+                transcript_to_mutations[primary_transcript].append({
+                    'gene': mutation.get('Hugo_Symbol', ''),
+                    'protein_change': protein_change,
+                    'variant_classification': mutation.get('Variant_Classification', ''),
+                    'hgvsc': mutation.get('HGVSc', ''),
+                })
+        
+        # Process additional transcripts from all_effects field
+        if all_effects:
+            effects = all_effects.split(';')
+            for effect in effects:
+                if not effect:
+                    continue
+                
+                effect_parts = effect.split(',')
+                if len(effect_parts) >= 4:  # Ensure there are enough parts
+                    gene = effect_parts[0]
+                    effect_type = effect_parts[1]
+                    protein_change = effect_parts[2]
+                    transcript_id = ''
+                    
+                    # Find the ENST ID in the effect parts
+                    for part in effect_parts:
+                        if part.startswith('ENST'):
+                            transcript_id = part
+                            break
+                    
+                    if transcript_id.startswith('ENST'):
+                        if transcript_id not in transcript_to_mutations:
+                            transcript_to_mutations[transcript_id] = []
+                        
+                        transcript_to_mutations[transcript_id].append({
+                            'gene': gene,
+                            'protein_change': protein_change,
+                            'effect_type': effect_type,
+                        })
+    
+    return transcript_to_mutations
+
+def get_transcripts_with_protein_mutations(file_path):
+    """
+    Extract ENST IDs and their corresponding protein mutations from a MAF file.
+    
+    Args:
+        file_path (str): Path to the MAF file.
+        
+    Returns:
+        dict: Dictionary mapping ENST IDs to their protein mutations.
+    """
+    mutations = parse_maf_file(file_path)
+    return extract_transcripts_and_mutations(mutations)
+
+def display_transcripts_and_mutations(transcript_to_mutations):
+    """
+    Display the ENST IDs and their corresponding protein mutations.
+    
+    Args:
+        transcript_to_mutations (dict): Dictionary mapping ENST IDs to their protein mutations.
+    """
+    print(f"Found {len(transcript_to_mutations)} transcripts with mutations:")
+    
+    for transcript_id, mutations in transcript_to_mutations.items():
+        print(f"\n{transcript_id}:")
+        for mutation in mutations:
+            gene = mutation.get('gene', 'N/A')
+            protein_change = mutation.get('protein_change', 'N/A')
+            effect_type = mutation.get('effect_type', mutation.get('variant_classification', 'N/A'))
+            
+            print(f"  - Gene: {gene}, Protein change: {protein_change}, Effect: {effect_type}")
+
+
+
+# Example to parse a specific MAF file and save the results to a CSV
+def save_results_to_csv(transcript_to_mutations, output_file):
+    """
+    Save the transcript and mutation data to a CSV file.
+    
+    Args:
+        transcript_to_mutations (dict): Dictionary mapping ENST IDs to their protein mutations.
+        output_file (str): Path to the output CSV file.
+    """
+    import csv
+    
+    with open(output_file, 'w', newline='') as f:
+        writer = csv.writer(f)
+        writer.writerow(['Transcript_ID', 'Gene', 'Protein_Change', 'Effect_Type'])
+        
+        for transcript_id, mutations in transcript_to_mutations.items():
+            for mutation in mutations:
+                writer.writerow([
+                    transcript_id,
+                    mutation.get('gene', 'N/A'),
+                    mutation.get('protein_change', 'N/A'),
+                    mutation.get('effect_type', mutation.get('variant_classification', 'N/A'))
+                ])
+    
+    print(f"Results saved to {output_file}")
+
+# Additional usage example:
+# Parse a MAF file and save the results to a CSV
+# Save results to CSV
+# maf_file = "data/e0ad030c-034a-4315-a8a8-fa5be7feaac4.wxs.aliquot_ensemble_masked.maf"
+# output_file = "data/out_transcript_mutations.csv"
+# transcript_to_mutations = get_transcripts_with_protein_mutations(maf_file)
+# # display_transcripts_and_mutations(transcript_to_mutations)
+# save_results_to_csv(transcript_to_mutations, output_file)
