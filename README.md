@@ -1,4 +1,4 @@
-# MutPepGen
+# MutPep
 
 Mutation-derived peptide database generator for LC-MS/MS database search. Part of the CAN-IMMUNE project.
 
@@ -10,8 +10,8 @@ Mutation-derived peptide database generator for LC-MS/MS database search. Part o
 ## Installation
 
 ```bash
-git clone https://github.com/sanjaysgk/MutPepGen.git
-cd MutPepGen
+git clone https://github.com/sanjaysgk/MutPep.git
+cd MutPep
 python -m venv .venv
 source .venv/bin/activate
 pip install -e ".[all]"

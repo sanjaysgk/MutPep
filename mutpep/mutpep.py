@@ -18,7 +18,7 @@ from Bio import SeqIO
 from Bio.Seq import Seq
 import subprocess
 import sys
-from mutpepgen.utills import *
+from mutpep.utills import *
 
 def resource_path(relative_path):
     """Get absolute path to resource, works for dev and PyInstaller"""

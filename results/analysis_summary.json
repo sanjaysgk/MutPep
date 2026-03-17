@@ -1,0 +1,172 @@
+{
+  "mutation_peptides": [
+    {
+      "transcript_id": "ENST00000288602",
+      "mutation": "V600E",
+      "position": 600,
+      "peptide": "LTVKIGDFGLATEKSRWSGSHQFEQ",
+      "original_aa": "V",
+      "mutant_aa": "E"
+    },
+    {
+      "transcript_id": "ENST00000256078",
+      "mutation": "G12D",
+      "position": 12,
+      "peptide": "MTEYKLVVVGADGVGKSALTIQLI",
+      "original_aa": "G",
+      "mutant_aa": "D"
+    },
+    {
+      "transcript_id": "ENST00000269305",
+      "mutation": "R175H",
+      "position": 175,
+      "peptide": "YKQSQHMTEVVRHCPHHERCSDSDG",
+      "original_aa": "R",
+      "mutant_aa": "H"
+    },
+    {
+      "transcript_id": "ENST00000275493",
+      "mutation": "L858R",
+      "position": 858,
+      "peptide": "KTPQHVKITDFGRAKLLGAEEKEYH",
+      "original_aa": "L",
+      "mutant_aa": "R"
+    },
+    {
+      "transcript_id": "ENST00000263967",
+      "mutation": "E545K",
+      "position": 545,
+      "peptide": "AISTRDPLSEITKQEKDFLWSHRHY",
+      "original_aa": "E",
+      "mutant_aa": "K"
+    },
+    {
+      "transcript_id": "ENST00000345146",
+      "mutation": "R132H",
+      "position": 132,
+      "peptide": "LVSGWVKPIIIGHHAYGDQYRATDF",
+      "original_aa": "R",
+      "mutant_aa": "H"
+    },
+    {
+      "transcript_id": "ENST00000369535",
+      "mutation": "Q61K",
+      "position": 61,
+      "peptide": "ETCLLDILDTAGKEEYSAMRDQYMR",
+      "original_aa": "Q",
+      "mutant_aa": "K"
+    },
+    {
+      "transcript_id": "ENST00000371953",
+      "mutation": "R130Q",
+      "position": 130,
+      "peptide": "HVAAIHCKAGKGQTGVMICAYLLHR",
+      "original_aa": "R",
+      "mutant_aa": "Q"
+    },
+    {
+      "transcript_id": "ENST00000257430",
+      "mutation": "R1450X",
+      "position": 1450,
+      "peptide": "TPPPPPQTAQTKXEVPKNKAPTAEK",
+      "original_aa": "R",
+      "mutant_aa": "X"
+    },
+    {
+      "transcript_id": "ENST00000357654",
+      "mutation": "C61G",
+      "position": 61,
+      "peptide": "LKLLNQKKGPSQGPLCKNDITKRSL",
+      "original_aa": "C",
+      "mutant_aa": "G"
+    },
+    {
+      "transcript_id": "ENST00000380152",
+      "mutation": "N372H",
+      "position": 372,
+      "peptide": "PNDTDPLDSNVAHQKPFESGSDKIS",
+      "original_aa": "N",
+      "mutant_aa": "H"
+    },
+    {
+      "transcript_id": "ENST00000267163",
+      "mutation": "R320X",
+      "position": 320,
+      "peptide": "SNGLPEVENLSKXYEEIYLKNKDLD",
+      "original_aa": "R",
+      "mutant_aa": "X"
+    },
+    {
+      "transcript_id": "ENST00000261769",
+      "mutation": "V832M",
+      "position": 832,
+      "peptide": "TDPTAPPYDSLLMFDYEGSGSEAAS",
+      "original_aa": "V",
+      "mutant_aa": "M"
+    },
+    {
+      "transcript_id": "ENST00000397596",
+      "mutation": "Q61K",
+      "position": 61,
+      "peptide": "ETCLLDILDTAGKEEYSAMRDQYMR",
+      "original_aa": "Q",
+      "mutant_aa": "K"
+    },
+    {
+      "transcript_id": "ENST00000358487",
+      "mutation": "N550K",
+      "position": 550,
+      "peptide": "MKMIGKHKNIINKLGACTQDGPLYV",
+      "original_aa": "L",
+      "mutant_aa": "K"
+    },
+    {
+      "transcript_id": "ENST00000288135",
+      "mutation": "D816G",
+      "position": 816,
+      "peptide": "RITKICDFGLARGIKNDSNYVVKGN",
+      "original_aa": "D",
+      "mutant_aa": "G"
+    },
+    {
+      "transcript_id": "ENST00000381652",
+      "mutation": "V617F",
+      "position": 617,
+      "peptide": "SHKHLVLNYGVCFCGDENILVQEFV",
+      "original_aa": "V",
+      "mutant_aa": "F"
+    },
+    {
+      "transcript_id": "ENST00000257290",
+      "mutation": "D842G",
+      "position": 842,
+      "peptide": "KIVKICDFGLARGIMHDSNYVSKGS",
+      "original_aa": "D",
+      "mutant_aa": "G"
+    },
+    {
+      "transcript_id": "ENST00000349496",
+      "mutation": "S45F",
+      "position": 45,
+      "peptide": "SGIHSGATTTAPFLSGKGNPEEEDV",
+      "original_aa": "S",
+      "mutant_aa": "F"
+    },
+    {
+      "transcript_id": "ENST00000269571",
+      "mutation": "G309E",
+      "position": 309,
+      "peptide": "TACPYNYLSTDVESCTLVCPLHNQE",
+      "original_aa": "G",
+      "mutant_aa": "E"
+    }
+  ],
+  "stats": {
+    "total_mutations": 20,
+    "processed_mutations": 20,
+    "successful_peptides": 20,
+    "failed_peptides": 0,
+    "invalid_transcripts": 0,
+    "invalid_mutations": 0
+  }
+}
